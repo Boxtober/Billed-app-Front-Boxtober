@@ -60,6 +60,8 @@ export default class {
       .list()
       .then(snapshot => {
         const bills = snapshot
+          .slice()
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
           .map(doc => {
             try {
               return {
