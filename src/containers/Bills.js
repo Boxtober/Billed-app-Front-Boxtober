@@ -22,8 +22,34 @@ export default class {
 
   handleClickIconEye = (icon) => {
     const billUrl = icon.getAttribute("data-bill-url")
+    
+    // stock validation url incorrecte
+    const isInvalidUrl = !billUrl || billUrl === 'null' || billUrl === 'undefined'
+
+    // si null renvoyé par api
+    const isNull = /\/null(?:$|\?)/i.test(billUrl || '')
+
+    // validate l'extension
+    const validExtension = ['jpg', 'jpeg', 'png']
+    let invalidExtension = false
+    if (!isInvalidUrl) {
+      const urlWithoutQuery = billUrl.split('?')[0]
+      const hasDot = urlWithoutQuery.includes('.')
+      const fileExtension = hasDot ? urlWithoutQuery.split('.').pop().toLowerCase() : ''
+      if (hasDot) {
+        invalidExtension = !validExtension.includes(fileExtension)
+      }
+    }
+
+    if (isInvalidUrl || isNull || invalidExtension) {
+      const message = "Format justificatif invalide (format autorisé : JPG, JPEG, PNG)."
+      $('#modaleFile').find(".modal-body").html(`<p style='color: red;'>${message}</p>`)
+      $('#modaleFile').modal('show')
+      return
+    }
+    
     const imgWidth = Math.floor($('#modaleFile').width() * 0.5)
-    $('#modaleFile').find(".modal-body").html(`<div style='text-align: center;' class="bill-proof-container"><img width=${imgWidth} src=${billUrl} alt="Bill" /></div>`)
+    $('#modaleFile').find(".modal-body").html(`<div style='text-align: center;' class="bill-proof-container"><img width=${imgWidth} src="${billUrl}" alt="Bill" /></div>`)
     $('#modaleFile').modal('show')
   }
 

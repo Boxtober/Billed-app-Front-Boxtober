@@ -18,8 +18,19 @@ export default class NewBill {
   handleChangeFile = e => {
     e.preventDefault()
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
+    
+    const validExtension = ['jpg', 'jpeg', 'png']
+    const fileName = file.name
+    const fileExtension = fileName.split('.').pop().toLowerCase()
+    
+    if (!validExtension.includes(fileExtension)) {
+      alert('Format du justificatif invalide (JPG, JPEG, PNG)')
+      this.document.querySelector(`input[data-testid="file"]`).value = ''
+      return
+    }
+    
     const filePath = e.target.value.split(/\\/g)
-    const fileName = filePath[filePath.length-1]
+    const fileNameDisplay = filePath[filePath.length-1]
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
     formData.append('file', file)
@@ -37,7 +48,7 @@ export default class NewBill {
         console.log(fileUrl)
         this.billId = key
         this.fileUrl = fileUrl
-        this.fileName = fileName
+        this.fileName = fileNameDisplay
       }).catch(error => console.error(error))
   }
   handleSubmit = e => {

@@ -23,6 +23,29 @@ export const modal = () => (`
 
 export default (bill) => {
 
+  const fileNameForCheck = (bill && (bill.fileName || bill.fileUrl)) || ''
+  let invalidExtension = false
+  let extensionFound = false
+
+  const url = bill && bill.fileUrl ? bill.fileUrl : ''
+  const isNull = (bill && bill.fileName === 'null') || /\/null(?:$|\?)/i.test(url)
+
+  const match = fileNameForCheck.match(/\.([a-zA-Z0-9]+)(?:\?|$)/)
+  if (match && match[1]) {
+    extensionFound = true
+    const ext = match[1].toLowerCase()
+    invalidExtension = !['jpg','jpeg','png'].includes(ext)
+  }
+
+  if (isNull) {
+    invalidExtension = true
+  }
+
+  const isValidImage = !invalidExtension
+  const eyeAttrs = isValidImage
+    ? `data-bill-url="${bill.fileUrl || ''}"`
+    : `data-bill-url="" data-disabled="true" title="Format du justificatif invalide (JPG, JPEG, PNG)"`
+
   return (`
     <div class="container dashboard-form" data-testid="dashboard-form">
       <div class="row">
@@ -68,9 +91,10 @@ export default (bill) => {
         <div class="col-sm">
           <label for="file" class="bold-label">Justificatif</label>
             <div class='input-field input-flex file-flex'>
-            <span id="file-name-admin">${bill.fileName}</span>
+            <span id="file-name-admin">${bill.fileName || 'Aucun fichier joint'}</span>
+            ${invalidExtension ? `<span>(format invalide)</span>` : ''}
             <div class='icons-container'>
-              <span id="icon-eye-d" data-testid="icon-eye-d" data-bill-url="${bill.fileUrl}"> ${eyeWhite} </span>
+              <span id="icon-eye-d" data-testid="icon-eye-d" ${eyeAttrs} style="${invalidExtension ? 'opacity:0.5; cursor:not-allowed;' : ''}"> ${eyeWhite} </span>
             </div>
           </div>
         </div>

@@ -1,0 +1,59 @@
+{
+  "emmet.includeLanguages": { "javascript": "javascriptreact" },
+  "emmet.triggerExpansionOnTab": true,
+  "workbench.colorTheme": "Aura Soft Dark",
+  "workbench.productIconTheme": "icons-kamekazi-dark",
+  "editor.fontFamily": "JetBrains Mono, 'Courier New', monospace",
+  "editor.fontSize": 13,
+  "editor.fontVariations": false,
+  "background.customImages": [
+    "https://coolwallpapers.me/picsup/5094959-anime-miss-kobayashi039s-dragon-maid-tohru-miss-kobayashi039s-dragon-maid.png"
+  ],
+
+  "background.style": {
+    "content": "''",
+    "pointer-events": "none",
+    "position": "absolute",
+    "z-index": "99999",
+    "width": "100%",
+    "height": "100%",
+    "background-position": "100% 100%",
+    "background-repeat": "no-repeat",
+    "opacity": 1
+  },
+  "editor.cursorBlinking": "smooth",
+
+  "liveServer.settings.AdvanceCustomBrowserCmdLine": "",
+  "emojisense.languages": {
+    "markdown": true,
+    "plaintext": {
+      "markupCompletionsEnabled": false,
+      "emojiDecoratorsEnabled": false
+    },
+    "scminput": true,
+    "git-commit": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "window.zoomLevel": 1,
+  "prettier.tabWidth": 2,
+  "prettier.jsxBracketSameLine": true,
+  "prettier.bracketSameLine": true
+  // "prettier.printWidth": 210
+  // "[css]": {
+  //   "editor.defaultFormatter": "vscode.css-language-features"
+  // },
+  // "[html]": {
+  //   "editor.defaultFormatter": "vscode.html-language-features"
+  // },
+  // "[scss]": {
+  //   "editor.defaultFormatter": "vscode.css-language-features"
+  // },
+  // "[javascript]": {
+  //   "editor.defaultFormatter": "vscode.typescript-language-features"
+  // },
+  // "editor.wordWrap": "on",
+  // "[typescript]": {
+  //   "editor.defaultFormatter": "vscode.typescript-language-features"
+  // }
+}

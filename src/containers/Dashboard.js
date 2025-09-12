@@ -79,9 +79,37 @@ export default class {
   }
 
   handleClickIconEye = () => {
-    const billUrl = $('#icon-eye-d').attr("data-bill-url")
+    const $icon = $('#icon-eye-d')
+    const isDisabled = $icon.attr('data-disabled') === 'true'
+    const billUrl = $icon.attr("data-bill-url")
+
+    // stock validation url incorrecte
+    const isInvalidUrl = !billUrl || billUrl === 'null' || billUrl === 'undefined'
+
+    // si null renvoyé par api
+    const isNull = /\/null(?:$|\?)/i.test(billUrl || '')
+
+    // validate l'extension
+    const validExtension = ['jpg', 'jpeg', 'png']
+    let invalidExtension = false
+    if (!isInvalidUrl) {
+      const urlWithoutQuery = billUrl.split('?')[0]
+      const hasDot = urlWithoutQuery.includes('.')
+      const fileExtension = hasDot ? urlWithoutQuery.split('.').pop().toLowerCase() : ''
+      if (hasDot) {
+        invalidExtension = !validExtension.includes(fileExtension)
+      }
+    }
+
+    if (isDisabled || isInvalidUrl || isNull || invalidExtension) {
+      const message = "Format du justificatif invalide"
+      $('#modaleFileAdmin1').find(".modal-body").html(`<p style='color:red;'>${message}</p>`)
+      if (typeof $('#modaleFileAdmin1').modal === 'function') $('#modaleFileAdmin1').modal('show')
+      return
+    }
+
     const imgWidth = Math.floor($('#modaleFileAdmin1').width() * 0.8)
-    $('#modaleFileAdmin1').find(".modal-body").html(`<div style='text-align: center;'><img width=${imgWidth} src=${billUrl} alt="Bill"/></div>`)
+    $('#modaleFileAdmin1').find(".modal-body").html(`<div style='text-align: center;'><img width=${imgWidth} src="${billUrl}" alt="Bill"/></div>`)
     if (typeof $('#modaleFileAdmin1').modal === 'function') $('#modaleFileAdmin1').modal('show')
   }
 
@@ -131,6 +159,7 @@ export default class {
   }
 
   handleShowTickets(e, bills, index) {
+    /*
     if (this.counter === undefined || this.index !== index) this.counter = 0
     if (this.index === undefined || this.index !== index) this.index = index
     if (this.counter % 2 === 0) {
@@ -147,6 +176,32 @@ export default class {
 
     bills.forEach(bill => {
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
+    })
+
+    return bills
+    */
+
+    // compteurs indépendants par section
+    if (!this.sectionCounters) this.sectionCounters = {}
+    const currentCount = this.sectionCounters[index] || 0
+
+    if (currentCount % 2 === 0) {
+      $(`#arrow-icon${index}`).css({ transform: 'rotate(0deg)'})
+      const sectionBills = cards(filteredBills(bills, getStatus(index)))
+      $(`#status-bills-container${index}`).html(sectionBills)
+    } else {
+      $(`#arrow-icon${index}`).css({ transform: 'rotate(90deg)'})
+      $(`#status-bills-container${index}`).html("")
+    }
+
+    // incrémente uniquement le compteur de la section concernée
+    this.sectionCounters[index] = currentCount + 1
+
+    // rebinding des clicks pour les tickets visibles de cette section
+    filteredBills(bills, getStatus(index)).forEach(bill => {
+      const selector = `#open-bill${bill.id}`
+      $(selector).off('click')
+      $(selector).click((e) => this.handleEditTicket(e, bill, bills))
     })
 
     return bills
